@@ -903,8 +903,8 @@ void load_map(const char* fname)
 
       int addr;
       char sym[1024];
-      sscanf(line, "$%04X | %s", &addr, sym);
-      sscanf(line, "| %s", sval);
+      sscanf(line, "$%X | %s", &addr, sym);
+      sscanf(line, "%s |", sval);
 
       //printf("%s : %04X\n", sym, addr);
       type_symmap_entry sme;
@@ -1119,10 +1119,8 @@ void load_list(char* fname)
   char line[1024];
   int first_line = 1;
 
-  while (!feof(f))
+  while (fgets(line, 1024, f) != NULL)
   {
-    fgets(line, 1024, f);
-
     if (first_line)
     {
       first_line = 0;
@@ -3577,7 +3575,7 @@ void cmdHardNext(void)
     type_fileloc *found = find_in_list(reg.pc);
     cur_file_loc = found;
 
-    if (found->lastaddr != 0 && (found->addr <= reg.pc && reg.pc <= found->lastaddr))
+    if (found != NULL && found->lastaddr != 0 && (found->addr <= reg.pc && reg.pc <= found->lastaddr))
     {
       do
       {
